@@ -55,12 +55,43 @@ class TicketFlight(models.Model):
                                 self.flight_id)
 
 
+class BoardingPass(models.Model):
+    ticket_no_and_flight_id = models.OneToOneField(TicketFlight,
+                                                   on_delete=models.CASCADE,
+                                                   primary_key=True,
+    )
+    boarding_no = models.IntegerField()
+    seat_no = models.CharField(max_length=10)
+
+
 class Airport(models.Model):
     airport_code = models.CharField(max_length=4)
     airport_name = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
     coordinates = models.CharField(max_length=100)
     timezone = models.IntegerField()
+
+
+class Aircraft(models.Model):
+    aircraft_code = models.CharField(max_length=10, primary_key=True)
+    model = models.CharField(max_length=10)
+    range = models.CharField(max_length=10)
+
+
+class Seat(models.Model):
+    aircraft_code = models.ForeignKey(Aircraft,
+                                      on_delete=models.CASCADE)
+    seat_no = models.CharField(max_length=10)
+    fare_conditions = models.CharField(max_length=10)
+
+    class Meta:
+        unique_together = (('aircraft_code', 'seat_no'),)
+
+
+
+
+
+
 
 #
 # departure_airport__airport_code = 'DME'
